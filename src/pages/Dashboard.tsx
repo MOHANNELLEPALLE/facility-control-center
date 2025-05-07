@@ -3,6 +3,7 @@ import React from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import PageHeader from "@/components/dashboard/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button"; // Added the missing Button import
 import { ArrowUp, ArrowDown, Users, Building, User, FileText } from "lucide-react";
 
 const Dashboard = () => {
