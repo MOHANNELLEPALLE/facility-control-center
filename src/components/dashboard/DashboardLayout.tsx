@@ -17,11 +17,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   };
 
   return (
-    <div className="dashboard-container">
+    <div className="dashboard-container flex h-screen overflow-hidden">
       <DashboardSidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
-      <div className="dashboard-content w-full">
+      <div className="dashboard-content flex flex-col w-full">
         <TopNavbar toggleSidebar={toggleSidebar} />
-        <div className="main-content pb-12 pt-4">
+        <div className="main-content flex-1 p-6 overflow-y-auto">
           {children}
         </div>
       </div>

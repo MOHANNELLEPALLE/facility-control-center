@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { 
   FileText, 
   Upload, 
@@ -10,9 +10,11 @@ import {
   Hospital,
   Filter,
   Menu,
-  X
+  X,
+  LogOut
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -75,11 +77,24 @@ const navItems: NavItem[] = [
 
 const DashboardSidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleLogout = () => {
+    toast({
+      title: "Logging out",
+      description: "You have been logged out successfully",
+    });
+    // In a real app, handle actual logout logic here
+    setTimeout(() => {
+      navigate("/");
+    }, 1000);
+  };
 
   return (
     <aside
       className={cn(
-        "bg-white border-r border-gray-200 h-screen transition-all duration-300 ease-in-out z-30 flex flex-col",
+        "bg-white border-r border-gray-200 h-screen fixed left-0 top-0 transition-all duration-300 ease-in-out z-30 flex flex-col",
         isOpen ? "w-64" : "w-0 md:w-16 overflow-hidden"
       )}
     >
@@ -120,7 +135,7 @@ const DashboardSidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => 
       </nav>
       
       <div className="border-t border-gray-200 p-4">
-        <div className={cn("flex items-center", !isOpen && "justify-center")}>
+        <div className={cn("flex flex-col", !isOpen && "items-center")}>
           <div className="flex-shrink-0">
             <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
               <User className="h-4 w-4 text-gray-600" />
@@ -132,6 +147,16 @@ const DashboardSidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => 
               <p className="text-xs text-gray-500">admin@example.com</p>
             </div>
           )}
+          <button 
+            onClick={handleLogout}
+            className={cn(
+              "mt-3 flex items-center text-sm text-gray-600 hover:text-health-600",
+              !isOpen && "justify-center"
+            )}
+          >
+            <LogOut className="h-4 w-4" />
+            <span className={cn("ml-2", !isOpen && "hidden")}>Logout</span>
+          </button>
         </div>
       </div>
     </aside>
