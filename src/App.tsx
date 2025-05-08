@@ -11,6 +11,11 @@ import Users from "./pages/Users";
 import Facilities from "./pages/Facilities";
 import AddDoctor from "./pages/AddDoctor";
 import Requests from "./pages/Requests";
+import BulkUploadUsers from "./pages/BulkUploadUsers";
+import BulkUploadFacilities from "./pages/BulkUploadFacilities";
+import ManageSpecialities from "./pages/ManageSpecialities";
+import ManageFacilityServices from "./pages/ManageFacilityServices";
+import AddHospital from "./pages/AddHospital";
 
 const queryClient = new QueryClient();
 
@@ -27,7 +32,11 @@ const App = () => (
           <Route path="/facilities" element={<Facilities />} />
           <Route path="/add-doctor" element={<AddDoctor />} />
           <Route path="/requests" element={<Requests />} />
-          {/* Add more routes as they are implemented */}
+          <Route path="/bulk-upload-users" element={<BulkUploadUsers />} />
+          <Route path="/bulk-upload-facilities" element={<BulkUploadFacilities />} />
+          <Route path="/specialities" element={<ManageSpecialities />} />
+          <Route path="/facility-services" element={<ManageFacilityServices />} />
+          <Route path="/add-hospital" element={<AddHospital />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
