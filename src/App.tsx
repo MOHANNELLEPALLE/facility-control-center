@@ -9,6 +9,8 @@ import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import Users from "./pages/Users";
 import Facilities from "./pages/Facilities";
+import Doctors from "./pages/Doctors";
+import Organizations from "./pages/Organizations";
 import AddDoctor from "./pages/AddDoctor";
 import Requests from "./pages/Requests";
 import BulkUploadUsers from "./pages/BulkUploadUsers";
@@ -32,6 +34,8 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/users" element={<Users />} />
           <Route path="/facilities" element={<Facilities />} />
+          <Route path="/doctors" element={<Doctors />} />
+          <Route path="/organizations" element={<Organizations />} />
           <Route path="/add-doctor" element={<AddDoctor />} />
           <Route path="/requests" element={<Requests />} />
           <Route path="/bulk-upload-users" element={<BulkUploadUsers />} />

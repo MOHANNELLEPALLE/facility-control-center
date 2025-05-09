@@ -11,16 +11,11 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Calendar } from "lucide-react";
+import { Calendar as CalendarIcon, Search, ArrowDown, Eye, Check, X, UserPlus } from "lucide-react";
 import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
-} from "@/components/ui/dropdown-menu";
-import { Eye, Check, X, Calendar as CalendarIcon, Search, ArrowDown } from "lucide-react";
+  Card,
+  CardContent,
+} from "@/components/ui/card";
 
 const mockUsers = [
   {
@@ -81,6 +76,11 @@ const mockUsers = [
 ];
 
 const Users = () => {
+  // Calculate summary data
+  const totalUsers = mockUsers.length;
+  const activeUsers = mockUsers.filter(user => user.status === "Active").length;
+  const pendingUsers = mockUsers.filter(user => user.status === "Pending").length;
+  
   return (
     <DashboardLayout>
       <PageHeader 
@@ -88,9 +88,44 @@ const Users = () => {
         description="View and manage all users in the system."
       />
       
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-2xl font-bold">{totalUsers}</div>
+            <div className="text-sm text-gray-500">Total Users</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-2xl font-bold">{activeUsers}</div>
+            <div className="text-sm text-gray-500">Active Users</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-2xl font-bold">{pendingUsers}</div>
+            <div className="text-sm text-gray-500">Pending Verification</div>
+          </CardContent>
+        </Card>
+      </div>
+      
       <div className="bg-white rounded-lg shadow-sm overflow-hidden mt-6">
         <div className="p-4 border-b border-gray-200">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+            <Button variant="default" className="bg-health-600 hover:bg-health-700 mb-4 md:mb-0">
+              <UserPlus className="mr-2 h-4 w-4" />
+              Add User
+            </Button>
+            
+            <div className="flex space-x-2">
+              <Button variant="outline" className="justify-start flex items-center">
+                <ArrowDown className="mr-2 h-4 w-4" />
+                Export Data
+              </Button>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="flex items-center space-x-2">
               <CalendarIcon className="h-5 w-5 text-gray-400" />
               <Select>
@@ -153,45 +188,41 @@ const Users = () => {
               <Button variant="default" className="bg-health-600 hover:bg-health-700">Apply</Button>
               <Button variant="outline">Clear</Button>
             </div>
-            <Button variant="outline" className="justify-start flex items-center">
-              <ArrowDown className="mr-2 h-4 w-4" />
-              Export Data
-            </Button>
           </div>
         </div>
         
         <div className="overflow-x-auto">
-          <table className="admin-table">
-            <thead>
+          <table className="w-full">
+            <thead className="bg-gray-50">
               <tr>
-                <th>Date</th>
-                <th>Name</th>
-                <th>Organization Name</th>
-                <th>Role</th>
-                <th>Email</th>
-                <th>Contact Number</th>
-                <th>Account Verified?</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organization Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact Number</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Account Verified?</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="bg-white divide-y divide-gray-200">
               {mockUsers.map((user) => (
                 <tr key={user.id}>
-                  <td>{user.date}</td>
-                  <td>{user.name}</td>
-                  <td>{user.organization}</td>
-                  <td>{user.role}</td>
-                  <td>{user.email}</td>
-                  <td>{user.contact}</td>
-                  <td>
+                  <td className="px-6 py-4 whitespace-nowrap">{user.date}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{user.organization}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{user.role}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{user.contact}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                       user.verified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
                     }`}>
                       {user.verified ? 'Yes' : 'No'}
                     </span>
                   </td>
-                  <td>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                       user.status === 'Active' ? 'bg-green-100 text-green-800' : 
                       user.status === 'Inactive' ? 'bg-red-100 text-red-800' : 
@@ -200,7 +231,7 @@ const Users = () => {
                       {user.status}
                     </span>
                   </td>
-                  <td>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center space-x-2">
                       <Button variant="ghost" size="icon" className="h-8 w-8">
                         <Eye className="h-4 w-4" />

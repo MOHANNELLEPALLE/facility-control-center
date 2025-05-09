@@ -4,7 +4,8 @@ import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import PageHeader from "@/components/dashboard/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowDown, Eye, Search } from "lucide-react";
+import { ArrowDown, Eye, Search, Building } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 const mockFacilities = [
   {
@@ -60,6 +61,11 @@ const mockFacilities = [
 ];
 
 const Facilities = () => {
+  // Calculate summary data
+  const totalFacilities = mockFacilities.length;
+  const activeFacilities = mockFacilities.filter(facility => facility.status === "Active").length;
+  const hospitals = mockFacilities.filter(facility => facility.facilityType === "Hospital").length;
+  
   return (
     <DashboardLayout>
       <PageHeader 
@@ -67,50 +73,78 @@ const Facilities = () => {
         description="View and manage all healthcare facilities in the system." 
       />
       
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-2xl font-bold">{totalFacilities}</div>
+            <div className="text-sm text-gray-500">Total Facilities</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-2xl font-bold">{activeFacilities}</div>
+            <div className="text-sm text-gray-500">Active Facilities</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-2xl font-bold">{hospitals}</div>
+            <div className="text-sm text-gray-500">Hospitals</div>
+          </CardContent>
+        </Card>
+      </div>
+      
       <div className="bg-white rounded-lg shadow-sm overflow-hidden mt-6">
         <div className="p-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-          <div className="relative w-full sm:max-w-xs">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input 
-              type="search" 
-              placeholder="Search facilities..." 
-              className="pl-10" 
-            />
-          </div>
-          <Button variant="outline" className="flex items-center">
-            <ArrowDown className="mr-2 h-4 w-4" />
-            Export
+          <Button variant="default" className="bg-health-600 hover:bg-health-700">
+            <Building className="mr-2 h-4 w-4" />
+            Add Facility
           </Button>
+          
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative w-full sm:max-w-xs">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input 
+                type="search" 
+                placeholder="Search facilities..." 
+                className="pl-10" 
+              />
+            </div>
+            <Button variant="outline" className="flex items-center">
+              <ArrowDown className="mr-2 h-4 w-4" />
+              Export
+            </Button>
+          </div>
         </div>
         
         <div className="overflow-x-auto">
-          <table className="admin-table">
-            <thead>
+          <table className="w-full">
+            <thead className="bg-gray-50">
               <tr>
-                <th>Facility</th>
-                <th>Location</th>
-                <th>Website</th>
-                <th>User</th>
-                <th>Facility Type</th>
-                <th>Created At</th>
-                <th>Status</th>
-                <th>Action</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Facility</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Website</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Facility Type</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="bg-white divide-y divide-gray-200">
               {mockFacilities.map((facility) => (
                 <tr key={facility.id}>
-                  <td className="font-medium">{facility.facility}</td>
-                  <td>{facility.location}</td>
-                  <td>
+                  <td className="px-6 py-4 whitespace-nowrap font-medium">{facility.facility}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{facility.location}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <a href={`https://${facility.website}`} target="_blank" rel="noopener noreferrer" className="text-health-600 hover:underline">
                       {facility.website}
                     </a>
                   </td>
-                  <td>{facility.user}</td>
-                  <td>{facility.facilityType}</td>
-                  <td>{facility.createdAt}</td>
-                  <td>
+                  <td className="px-6 py-4 whitespace-nowrap">{facility.user}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{facility.facilityType}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{facility.createdAt}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                       facility.status === 'Active' ? 'bg-green-100 text-green-800' : 
                       facility.status === 'Inactive' ? 'bg-red-100 text-red-800' : 
@@ -119,7 +153,7 @@ const Facilities = () => {
                       {facility.status}
                     </span>
                   </td>
-                  <td>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <Button variant="ghost" size="icon" className="h-8 w-8">
                       <Eye className="h-4 w-4" />
                     </Button>

@@ -64,6 +64,16 @@ const navItems: NavItem[] = [
     icon: Building,
   },
   {
+    title: "Manage Doctors",
+    path: "/doctors",
+    icon: User,
+  },
+  {
+    title: "Manage Organizations",
+    path: "/organizations",
+    icon: Building,
+  },
+  {
     title: "Add Doctors",
     path: "/add-doctor",
     icon: User,
