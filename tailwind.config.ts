@@ -74,6 +74,11 @@ export default {
 					700: '#0284c7',
 					800: '#0369a1',
 					900: '#075985',
+				},
+				// New theme colors
+				theme: {
+					primary: '#f35a57', // Primary accent color
+					secondary: '#787878', // Secondary/neutral color
 				}
 			},
 			borderRadius: {

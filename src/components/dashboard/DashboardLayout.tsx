@@ -25,7 +25,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
         }`}
       >
         <TopNavbar toggleSidebar={toggleSidebar} />
-        <div className="main-content flex-1 p-4 md:p-6 overflow-x-hidden max-w-full">
+        <div className="main-content flex-1 p-4 md:p-6 overflow-hidden">
           {children}
         </div>
       </div>
