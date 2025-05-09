@@ -6,6 +6,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowDown, Eye, Search, Building } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const mockFacilities = [
   {
@@ -118,33 +135,33 @@ const Facilities = () => {
         </div>
         
         <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Facility</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Website</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Facility Type</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Facility</TableHead>
+                <TableHead>Location</TableHead>
+                <TableHead>Website</TableHead>
+                <TableHead>User</TableHead>
+                <TableHead>Facility Type</TableHead>
+                <TableHead>Created At</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {mockFacilities.map((facility) => (
-                <tr key={facility.id}>
-                  <td className="px-6 py-4 whitespace-nowrap font-medium">{facility.facility}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{facility.location}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                <TableRow key={facility.id}>
+                  <TableCell className="font-medium">{facility.facility}</TableCell>
+                  <TableCell>{facility.location}</TableCell>
+                  <TableCell>
                     <a href={`https://${facility.website}`} target="_blank" rel="noopener noreferrer" className="text-health-600 hover:underline">
                       {facility.website}
                     </a>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">{facility.user}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{facility.facilityType}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{facility.createdAt}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  </TableCell>
+                  <TableCell>{facility.user}</TableCell>
+                  <TableCell>{facility.facilityType}</TableCell>
+                  <TableCell>{facility.createdAt}</TableCell>
+                  <TableCell>
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                       facility.status === 'Active' ? 'bg-green-100 text-green-800' : 
                       facility.status === 'Inactive' ? 'bg-red-100 text-red-800' : 
@@ -152,40 +169,41 @@ const Facilities = () => {
                     }`}>
                       {facility.status}
                     </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  </TableCell>
+                  <TableCell>
                     <Button variant="ghost" size="icon" className="h-8 w-8">
                       <Eye className="h-4 w-4" />
                     </Button>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
         
-        <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6">
-          <div className="flex flex-1 justify-between sm:hidden">
-            <Button variant="outline">Previous</Button>
-            <Button variant="outline">Next</Button>
-          </div>
-          <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-            <div>
-              <p className="text-sm text-gray-700">
-                Showing <span className="font-medium">1</span> to <span className="font-medium">5</span> of{" "}
-                <span className="font-medium">20</span> results
-              </p>
-            </div>
-            <div>
-              <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-                <Button variant="outline" className="rounded-l-md">Previous</Button>
-                <Button variant="default" className="bg-health-600 hover:bg-health-700 mx-1">1</Button>
-                <Button variant="outline" className="mx-1">2</Button>
-                <Button variant="outline" className="mx-1">3</Button>
-                <Button variant="outline" className="rounded-r-md">Next</Button>
-              </nav>
-            </div>
-          </div>
+        <div className="py-4 px-6 border-t border-gray-200">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious href="#" />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#" isActive>1</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">2</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">3</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext href="#" />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       </div>
     </DashboardLayout>

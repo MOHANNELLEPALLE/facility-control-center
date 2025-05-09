@@ -16,6 +16,15 @@ import {
   Card,
   CardContent,
 } from "@/components/ui/card";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const mockUsers = [
   {
@@ -109,7 +118,7 @@ const Users = () => {
         </Card>
       </div>
       
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden mt-6">
+      <div className="bg-white rounded-lg shadow-sm overflow-hidden mt-6 w-full">
         <div className="p-4 border-b border-gray-200">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
             <Button variant="default" className="bg-health-600 hover:bg-health-700 mb-4 md:mb-0">
@@ -191,7 +200,7 @@ const Users = () => {
           </div>
         </div>
         
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto w-full">
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
@@ -250,28 +259,29 @@ const Users = () => {
           </table>
         </div>
         
-        <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6">
-          <div className="flex flex-1 justify-between sm:hidden">
-            <Button variant="outline">Previous</Button>
-            <Button variant="outline">Next</Button>
-          </div>
-          <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-            <div>
-              <p className="text-sm text-gray-700">
-                Showing <span className="font-medium">1</span> to <span className="font-medium">5</span> of{" "}
-                <span className="font-medium">25</span> results
-              </p>
-            </div>
-            <div>
-              <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-                <Button variant="outline" className="rounded-l-md">Previous</Button>
-                <Button variant="default" className="bg-health-600 hover:bg-health-700 mx-1">1</Button>
-                <Button variant="outline" className="mx-1">2</Button>
-                <Button variant="outline" className="mx-1">3</Button>
-                <Button variant="outline" className="rounded-r-md">Next</Button>
-              </nav>
-            </div>
-          </div>
+        <div className="py-4 px-6 border-t border-gray-200">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious href="#" />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#" isActive>1</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">2</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">3</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext href="#" />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       </div>
     </DashboardLayout>

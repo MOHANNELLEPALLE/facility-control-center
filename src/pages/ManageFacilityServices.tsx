@@ -4,7 +4,16 @@ import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import PageHeader from "@/components/dashboard/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Pencil, Trash2, Image } from "lucide-react";
+import { Pencil, Trash2, Image, Plus } from "lucide-react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 // Mock data for facility services
 const mockServices = [
@@ -43,6 +52,13 @@ const ManageFacilityServices = () => {
 
       <div className="mt-6">
         <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="mb-4 flex justify-end">
+            <Button variant="default" className="bg-health-600 hover:bg-health-700">
+              <Plus className="mr-2 h-4 w-4" />
+              Add Service
+            </Button>
+          </div>
+          
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
@@ -103,6 +119,28 @@ const ManageFacilityServices = () => {
                 )}
               </TableBody>
             </Table>
+          </div>
+          
+          <div className="mt-4">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious href="#" />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#" isActive>1</PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#">2</PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext href="#" />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </div>
         </div>
       </div>

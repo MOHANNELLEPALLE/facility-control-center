@@ -11,7 +11,8 @@ import {
   Filter,
   Menu,
   X,
-  LogOut
+  LogOut,
+  LayoutDashboard
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
@@ -28,6 +29,11 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
+  {
+    title: "Dashboard",
+    path: "/dashboard",
+    icon: LayoutDashboard,
+  },
   {
     title: "Manage Requests",
     path: "/requests",
@@ -104,8 +110,8 @@ const DashboardSidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => 
   return (
     <aside
       className={cn(
-        "bg-white border-r border-gray-200 h-screen fixed left-0 top-0 transition-all duration-300 ease-in-out z-30 flex flex-col",
-        isOpen ? "w-64" : "w-0 md:w-16 overflow-hidden"
+        "bg-white border-r border-gray-200 h-screen fixed left-0 top-0 transition-all duration-300 ease-in-out z-30 flex flex-col overflow-hidden",
+        isOpen ? "w-64" : "w-0 md:w-16"
       )}
     >
       <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
@@ -135,6 +141,7 @@ const DashboardSidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => 
                     : "text-gray-600 hover:bg-gray-100",
                   !isOpen && "justify-center md:px-3"
                 )}
+                title={!isOpen ? item.title : undefined}
               >
                 <item.icon className={cn("h-5 w-5", location.pathname === item.path ? "text-health-600" : "text-gray-500")} />
                 <span className={cn("ml-3 truncate", !isOpen && "hidden")}>{item.title}</span>

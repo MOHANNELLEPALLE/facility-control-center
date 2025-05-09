@@ -13,6 +13,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const mockDoctors = [
   {
@@ -173,29 +190,29 @@ const Doctors = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Specialty</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organization</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Experience</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Specialty</TableHead>
+                <TableHead>Organization</TableHead>
+                <TableHead>Phone</TableHead>
+                <TableHead>Experience</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {mockDoctors.map((doctor) => (
-                <tr key={doctor.id}>
-                  <td className="px-6 py-4 whitespace-nowrap font-medium">{doctor.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{doctor.email}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{doctor.specialty}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{doctor.organization}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{doctor.phone}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{doctor.yearsExperience} years</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                <TableRow key={doctor.id}>
+                  <TableCell className="font-medium">{doctor.name}</TableCell>
+                  <TableCell>{doctor.email}</TableCell>
+                  <TableCell>{doctor.specialty}</TableCell>
+                  <TableCell>{doctor.organization}</TableCell>
+                  <TableCell>{doctor.phone}</TableCell>
+                  <TableCell>{doctor.yearsExperience} years</TableCell>
+                  <TableCell>
                     <span
                       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                         doctor.status === "Active"
@@ -207,40 +224,41 @@ const Doctors = () => {
                     >
                       {doctor.status}
                     </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  </TableCell>
+                  <TableCell>
                     <Button variant="ghost" size="icon" className="h-8 w-8">
                       <Eye className="h-4 w-4" />
                     </Button>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
 
-        <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6">
-          <div className="flex flex-1 justify-between sm:hidden">
-            <Button variant="outline">Previous</Button>
-            <Button variant="outline">Next</Button>
-          </div>
-          <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-            <div>
-              <p className="text-sm text-gray-700">
-                Showing <span className="font-medium">1</span> to <span className="font-medium">5</span> of{" "}
-                <span className="font-medium">35</span> results
-              </p>
-            </div>
-            <div>
-              <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-                <Button variant="outline" className="rounded-l-md">Previous</Button>
-                <Button variant="default" className="bg-health-600 hover:bg-health-700 mx-1">1</Button>
-                <Button variant="outline" className="mx-1">2</Button>
-                <Button variant="outline" className="mx-1">3</Button>
-                <Button variant="outline" className="rounded-r-md">Next</Button>
-              </nav>
-            </div>
-          </div>
+        <div className="py-4 px-6 border-t border-gray-200">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious href="#" />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#" isActive>1</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">2</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">3</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext href="#" />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       </div>
     </DashboardLayout>
