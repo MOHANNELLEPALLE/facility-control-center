@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Bell, LogOut, Search, Settings } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -73,12 +74,23 @@ const TopNavbar: React.FC<TopNavbarProps> = () => {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Settings</DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => navigate("/admin-settings")}>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Admin Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" />
               <span>Logout</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        <Avatar className="h-8 w-8 cursor-pointer">
+          <AvatarFallback className="bg-primary text-primary-foreground text-sm font-medium">
+            A
+          </AvatarFallback>
+        </Avatar>
       </div>
     </header>
   );
