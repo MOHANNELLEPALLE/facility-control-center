@@ -41,7 +41,8 @@ interface NavItem {
 interface NavCategory {
   title: string;
   icon: React.ElementType;
-  items: NavItem[];
+  items?: NavItem[];
+  subcategories?: NavCategory[];
   badge?: number;
 }
 
@@ -61,53 +62,79 @@ const navCategories: NavCategory[] = [
     title: "Management",
     icon: Users,
     badge: 12,
-    items: [
+    subcategories: [
       {
-        title: "Manage Users",
-        path: "/users",
+        title: "User Management",
         icon: Users,
         badge: 3,
+        items: [
+          {
+            title: "Manage Users",
+            path: "/users",
+            icon: Users,
+            badge: 3,
+          },
+          {
+            title: "Manage Doctors",
+            path: "/doctors",
+            icon: UserCog,
+          },
+          {
+            title: "Add Doctors",
+            path: "/add-doctor",
+            icon: UserPlus,
+          },
+          {
+            title: "Bulk Upload Users",
+            path: "/bulk-upload-users",
+            icon: Upload,
+          },
+        ],
       },
       {
-        title: "Manage Doctors",
-        path: "/doctors",
-        icon: UserCog,
-      },
-      {
-        title: "Add Doctors",
-        path: "/add-doctor",
-        icon: UserPlus,
-      },
-      {
-        title: "Bulk Upload Users",
-        path: "/bulk-upload-users",
-        icon: Upload,
-      },
-      {
-        title: "Manage Facilities",
-        path: "/facilities",
+        title: "Facility Management",
         icon: Building,
+        items: [
+          {
+            title: "Manage Facilities",
+            path: "/facilities",
+            icon: Building,
+          },
+          {
+            title: "Add Hospitals",
+            path: "/add-hospital",
+            icon: Hospital,
+          },
+          {
+            title: "Bulk Upload Facilities",
+            path: "/bulk-upload-facilities",
+            icon: Upload,
+          },
+        ],
       },
       {
-        title: "Add Hospitals",
-        path: "/add-hospital",
-        icon: Hospital,
-      },
-      {
-        title: "Bulk Upload Facilities",
-        path: "/bulk-upload-facilities",
-        icon: Upload,
-      },
-      {
-        title: "Manage Organizations",
-        path: "/organizations",
+        title: "Organization Management",
         icon: Warehouse,
+        items: [
+          {
+            title: "Manage Organizations",
+            path: "/organizations",
+            icon: Warehouse,
+          },
+        ],
       },
       {
-        title: "Manage Requests",
-        path: "/requests",
+        title: "Request Management",
         icon: FileText,
         badge: 5,
+        items: [
+          {
+            title: "Manage Requests",
+            path: "/requests",
+            icon: FileText,
+            badge: 5,
+          },
+        ],
       },
     ],
   },
@@ -134,10 +161,25 @@ const DashboardSidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => 
   const navigate = useNavigate();
   const { toast } = useToast();
   const [expandedCategories, setExpandedCategories] = useState<string[]>(() => {
-    // Auto-expand categories that contain the current route
-    return navCategories
-      .filter(category => category.items.some(item => item.path === location.pathname))
-      .map(category => category.title);
+    // Auto-expand categories and subcategories that contain the current route
+    const expanded: string[] = [];
+    navCategories.forEach(category => {
+      const hasActiveItem = category.items?.some(item => item.path === location.pathname);
+      const hasActiveSubItem = category.subcategories?.some(sub => 
+        sub.items?.some(item => item.path === location.pathname)
+      );
+      if (hasActiveItem || hasActiveSubItem) {
+        expanded.push(category.title);
+        if (hasActiveSubItem) {
+          category.subcategories?.forEach(sub => {
+            if (sub.items?.some(item => item.path === location.pathname)) {
+              expanded.push(sub.title);
+            }
+          });
+        }
+      }
+    });
+    return expanded;
   });
 
   const toggleCategory = (categoryTitle: string) => {
@@ -194,7 +236,8 @@ const DashboardSidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => 
         <div className="space-y-3 px-3">
           {navCategories.map((category) => {
             const isExpanded = expandedCategories.includes(category.title);
-            const hasActiveItem = category.items.some(item => item.path === location.pathname);
+            const hasActiveItem = category.items?.some(item => item.path === location.pathname) || 
+              category.subcategories?.some(sub => sub.items?.some(item => item.path === location.pathname));
             
             return (
               <div key={category.title} className="space-y-1">
@@ -247,71 +290,208 @@ const DashboardSidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => 
                   )}
                 </button>
 
-                {/* Category Items with sliding animation */}
+                {/* Category Content with sliding animation */}
                 <div 
                   className={cn(
                     "overflow-hidden transition-all duration-300 ease-in-out",
-                    (isExpanded || !isOpen) ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                    (isExpanded || !isOpen) ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
                   )}
                 >
-                  <ul className={cn("space-y-1 pt-1", isOpen && "ml-2 pl-3 border-l border-sidebar-border/30")}>
-                    {category.items.map((item, index) => (
-                      <li 
-                        key={item.path}
-                        className={cn(
-                          "transform transition-all duration-200",
-                          (isExpanded || !isOpen) ? "translate-x-0 opacity-100" : "-translate-x-2 opacity-0"
-                        )}
-                        style={{ transitionDelay: `${index * 50}ms` }}
-                      >
-                        <Link
-                          to={item.path}
-                          className={cn(
-                            "flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 group relative",
-                            location.pathname === item.path
-                              ? "bg-sidebar-primary/15 text-sidebar-primary shadow-sm border border-sidebar-primary/20"
-                              : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-primary",
-                            !isOpen && "justify-center md:px-3"
-                          )}
-                          title={!isOpen ? item.title : undefined}
-                        >
-                          <div className="relative">
-                            <item.icon className={cn(
-                              "h-4 w-4 transition-colors duration-200", 
-                              location.pathname === item.path 
-                                ? "text-sidebar-primary" 
-                                : "text-sidebar-foreground/60 group-hover:text-sidebar-primary"
-                            )} />
-                            {item.badge && !isOpen && (
-                              <Badge 
-                                variant="destructive" 
-                                className="absolute -top-2 -right-2 h-4 w-4 p-0 text-xs flex items-center justify-center"
-                              >
-                                {item.badge > 9 ? '9+' : item.badge}
-                              </Badge>
+                  <div className={cn("space-y-1 pt-1", isOpen && "ml-2 pl-3 border-l border-sidebar-border/30")}>
+                    
+                    {/* Direct Items */}
+                    {category.items && (
+                      <ul className="space-y-1">
+                        {category.items.map((item, index) => (
+                          <li 
+                            key={item.path}
+                            className={cn(
+                              "transform transition-all duration-200",
+                              (isExpanded || !isOpen) ? "translate-x-0 opacity-100" : "-translate-x-2 opacity-0"
                             )}
-                          </div>
-                          <span className={cn(
-                            "ml-3 truncate transition-opacity duration-200", 
-                            !isOpen && "hidden"
-                          )}>
-                            {item.title}
-                          </span>
-                          {item.badge && isOpen && (
-                            <Badge 
-                              variant="destructive" 
-                              className="ml-auto h-5 text-xs"
+                            style={{ transitionDelay: `${index * 50}ms` }}
+                          >
+                            <Link
+                              to={item.path}
+                              className={cn(
+                                "flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 group relative",
+                                location.pathname === item.path
+                                  ? "bg-sidebar-primary/15 text-sidebar-primary shadow-sm border border-sidebar-primary/20"
+                                  : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-primary",
+                                !isOpen && "justify-center md:px-3"
+                              )}
+                              title={!isOpen ? item.title : undefined}
                             >
-                              {item.badge}
-                            </Badge>
-                          )}
-                          {location.pathname === item.path && (
-                            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-sidebar-primary rounded-r-full" />
-                          )}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                              <div className="relative">
+                                <item.icon className={cn(
+                                  "h-4 w-4 transition-colors duration-200", 
+                                  location.pathname === item.path 
+                                    ? "text-sidebar-primary" 
+                                    : "text-sidebar-foreground/60 group-hover:text-sidebar-primary"
+                                )} />
+                                {item.badge && !isOpen && (
+                                  <Badge 
+                                    variant="destructive" 
+                                    className="absolute -top-2 -right-2 h-4 w-4 p-0 text-xs flex items-center justify-center"
+                                  >
+                                    {item.badge > 9 ? '9+' : item.badge}
+                                  </Badge>
+                                )}
+                              </div>
+                              <span className={cn(
+                                "ml-3 truncate transition-opacity duration-200", 
+                                !isOpen && "hidden"
+                              )}>
+                                {item.title}
+                              </span>
+                              {item.badge && isOpen && (
+                                <Badge 
+                                  variant="destructive" 
+                                  className="ml-auto h-5 text-xs"
+                                >
+                                  {item.badge}
+                                </Badge>
+                              )}
+                              {location.pathname === item.path && (
+                                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-sidebar-primary rounded-r-full" />
+                              )}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    {/* Subcategories */}
+                    {category.subcategories && (
+                      <div className="space-y-2">
+                        {category.subcategories.map((subcategory, subIndex) => {
+                          const isSubExpanded = expandedCategories.includes(subcategory.title);
+                          const hasActiveSubItem = subcategory.items?.some(item => item.path === location.pathname);
+                          
+                          return (
+                            <div key={subcategory.title} className="space-y-1">
+                              {/* Subcategory Header */}
+                              <button
+                                onClick={() => toggleCategory(subcategory.title)}
+                                className={cn(
+                                  "w-full flex items-center px-3 py-2 text-xs font-medium rounded-lg transition-all duration-200 group",
+                                  hasActiveSubItem 
+                                    ? "text-sidebar-primary bg-sidebar-accent/30" 
+                                    : "text-sidebar-foreground/50 hover:text-sidebar-primary hover:bg-sidebar-accent/20",
+                                  !isOpen && "justify-center md:px-3"
+                                )}
+                                style={{ transitionDelay: `${subIndex * 100}ms` }}
+                                title={!isOpen ? subcategory.title : undefined}
+                              >
+                                <div className="relative">
+                                  <subcategory.icon className={cn(
+                                    "h-3.5 w-3.5 transition-colors duration-200", 
+                                    hasActiveSubItem ? "text-sidebar-primary" : "text-sidebar-foreground/50 group-hover:text-sidebar-primary"
+                                  )} />
+                                  {subcategory.badge && !isOpen && (
+                                    <Badge 
+                                      variant="destructive" 
+                                      className="absolute -top-1.5 -right-1.5 h-3 w-3 p-0 text-xs flex items-center justify-center"
+                                    >
+                                      {subcategory.badge > 9 ? '9+' : subcategory.badge}
+                                    </Badge>
+                                  )}
+                                </div>
+                                {isOpen && (
+                                  <>
+                                    <span className="ml-2.5 truncate text-xs">{subcategory.title}</span>
+                                    <div className="ml-auto flex items-center space-x-1">
+                                      {subcategory.badge && (
+                                        <Badge 
+                                          variant="secondary" 
+                                          className="h-4 text-xs bg-sidebar-accent/50 text-sidebar-foreground border-0"
+                                        >
+                                          {subcategory.badge}
+                                        </Badge>
+                                      )}
+                                      <div className={cn(
+                                        "transition-transform duration-200",
+                                        isSubExpanded ? "rotate-90" : "rotate-0"
+                                      )}>
+                                        <ChevronRight className="h-2.5 w-2.5" />
+                                      </div>
+                                    </div>
+                                  </>
+                                )}
+                              </button>
+
+                              {/* Subcategory Items */}
+                              <div 
+                                className={cn(
+                                  "overflow-hidden transition-all duration-300 ease-in-out",
+                                  (isSubExpanded || !isOpen) ? "max-h-60 opacity-100" : "max-h-0 opacity-0"
+                                )}
+                              >
+                                <ul className={cn("space-y-0.5 pt-0.5", isOpen && "ml-4 pl-2 border-l border-sidebar-border/20")}>
+                                  {subcategory.items?.map((item, itemIndex) => (
+                                    <li 
+                                      key={item.path}
+                                      className={cn(
+                                        "transform transition-all duration-200",
+                                        (isSubExpanded || !isOpen) ? "translate-x-0 opacity-100" : "-translate-x-2 opacity-0"
+                                      )}
+                                      style={{ transitionDelay: `${itemIndex * 30}ms` }}
+                                    >
+                                      <Link
+                                        to={item.path}
+                                        className={cn(
+                                          "flex items-center px-2.5 py-2 text-sm font-medium rounded-lg transition-all duration-200 group relative",
+                                          location.pathname === item.path
+                                            ? "bg-sidebar-primary/10 text-sidebar-primary shadow-sm border border-sidebar-primary/15"
+                                            : "text-sidebar-foreground/60 hover:bg-sidebar-accent/30 hover:text-sidebar-primary",
+                                          !isOpen && "justify-center md:px-2.5"
+                                        )}
+                                        title={!isOpen ? item.title : undefined}
+                                      >
+                                        <div className="relative">
+                                          <item.icon className={cn(
+                                            "h-3.5 w-3.5 transition-colors duration-200", 
+                                            location.pathname === item.path 
+                                              ? "text-sidebar-primary" 
+                                              : "text-sidebar-foreground/50 group-hover:text-sidebar-primary"
+                                          )} />
+                                          {item.badge && !isOpen && (
+                                            <Badge 
+                                              variant="destructive" 
+                                              className="absolute -top-1.5 -right-1.5 h-3 w-3 p-0 text-xs flex items-center justify-center"
+                                            >
+                                              {item.badge > 9 ? '9+' : item.badge}
+                                            </Badge>
+                                          )}
+                                        </div>
+                                        <span className={cn(
+                                          "ml-2.5 truncate transition-opacity duration-200 text-xs", 
+                                          !isOpen && "hidden"
+                                        )}>
+                                          {item.title}
+                                        </span>
+                                        {item.badge && isOpen && (
+                                          <Badge 
+                                            variant="destructive" 
+                                            className="ml-auto h-4 text-xs"
+                                          >
+                                            {item.badge}
+                                          </Badge>
+                                        )}
+                                        {location.pathname === item.path && (
+                                          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 bg-sidebar-primary rounded-r-full" />
+                                        )}
+                                      </Link>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             );
