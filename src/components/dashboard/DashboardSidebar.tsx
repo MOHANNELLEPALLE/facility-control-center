@@ -56,6 +56,11 @@ const navCategories: NavCategory[] = [
         path: "/dashboard",
         icon: LayoutDashboard,
       },
+      {
+        title: "Analytics",
+        path: "/analytics",
+        icon: Hospital,
+      },
     ],
   },
   {

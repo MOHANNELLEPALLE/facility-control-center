@@ -21,6 +21,7 @@ import AddHospital from "./pages/AddHospital";
 import AddPatient from "./pages/AddPatient";
 import AdminSettings from "./pages/AdminSettings";
 import Login from "./pages/Login";
+import Analytics from "./pages/Analytics";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,7 @@ const App = () => (
           <Route path="/facility-services" element={<ManageFacilityServices />} />
           <Route path="/add-hospital" element={<AddHospital />} />
           <Route path="/admin-settings" element={<AdminSettings />} />
+          <Route path="/analytics" element={<Analytics />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
