@@ -1,10 +1,11 @@
 
-import React from "react";
+import React, { useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import PageHeader from "@/components/dashboard/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowDown, Eye, Search, Building } from "lucide-react";
+import FacilityManagementModal from "@/components/modals/FacilityManagementModal";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
@@ -78,10 +79,18 @@ const mockFacilities = [
 ];
 
 const Facilities = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedFacility, setSelectedFacility] = useState(null);
+
   // Calculate summary data
   const totalFacilities = mockFacilities.length;
   const activeFacilities = mockFacilities.filter(facility => facility.status === "Active").length;
   const hospitals = mockFacilities.filter(facility => facility.facilityType === "Hospital").length;
+
+  const handleViewFacility = (facility: any) => {
+    setSelectedFacility(facility);
+    setIsModalOpen(true);
+  };
   
   return (
     <DashboardLayout>
@@ -171,7 +180,12 @@ const Facilities = () => {
                     </span>
                   </TableCell>
                   <TableCell>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-8 w-8"
+                      onClick={() => handleViewFacility(facility)}
+                    >
                       <Eye className="h-4 w-4" />
                     </Button>
                   </TableCell>
@@ -206,6 +220,12 @@ const Facilities = () => {
           </Pagination>
         </div>
       </div>
+
+      <FacilityManagementModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        facility={selectedFacility}
+      />
     </DashboardLayout>
   );
 };
