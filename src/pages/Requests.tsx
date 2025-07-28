@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import PageHeader from "@/components/dashboard/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Eye, Trash2, Search, Calendar, ArrowUpDown } from "lucide-react";
+import RequestManagementModal from "@/components/modals/RequestManagementModal";
 
 const mockRequests = [
   {
@@ -72,6 +73,19 @@ const mockRequests = [
 ];
 
 const Requests = () => {
+  const [selectedRequest, setSelectedRequest] = useState<typeof mockRequests[0] | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleViewRequest = (request: typeof mockRequests[0]) => {
+    setSelectedRequest(request);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedRequest(null);
+  };
+
   return (
     <DashboardLayout>
       <PageHeader 
@@ -184,7 +198,12 @@ const Requests = () => {
                   <td>{request.createdFor}</td>
                   <td>
                     <div className="flex items-center space-x-2">
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8"
+                        onClick={() => handleViewRequest(request)}
+                      >
                         <Eye className="h-4 w-4" />
                       </Button>
                       <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600 hover:text-red-700">
@@ -218,6 +237,12 @@ const Requests = () => {
           </div>
         </div>
       </div>
+      
+      <RequestManagementModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        request={selectedRequest}
+      />
     </DashboardLayout>
   );
 };
