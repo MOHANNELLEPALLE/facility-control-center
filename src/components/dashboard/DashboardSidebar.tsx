@@ -144,6 +144,11 @@ const navCategories: NavCategory[] = [
             icon: FileText,
             badge: 5,
           },
+          {
+            title: "Create Request",
+            path: "/create-request",
+            icon: User,
+          },
         ],
       },
     ],
