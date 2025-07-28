@@ -18,6 +18,7 @@ import BulkUploadFacilities from "./pages/BulkUploadFacilities";
 import ManageSpecialities from "./pages/ManageSpecialities";
 import ManageFacilityServices from "./pages/ManageFacilityServices";
 import AddHospital from "./pages/AddHospital";
+import AddPatient from "./pages/AddPatient";
 import AdminSettings from "./pages/AdminSettings";
 import Login from "./pages/Login";
 
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/doctors" element={<Doctors />} />
           <Route path="/organizations" element={<Organizations />} />
           <Route path="/add-doctor" element={<AddDoctor />} />
+          <Route path="/add-patient" element={<AddPatient />} />
           <Route path="/requests" element={<Requests />} />
           <Route path="/bulk-upload-users" element={<BulkUploadUsers />} />
           <Route path="/bulk-upload-facilities" element={<BulkUploadFacilities />} />

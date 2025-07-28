@@ -75,6 +75,11 @@ const navCategories: NavCategory[] = [
             badge: 3,
           },
           {
+            title: "Add Patient",
+            path: "/add-patient",
+            icon: UserPlus,
+          },
+          {
             title: "Manage Doctors",
             path: "/doctors",
             icon: UserCog,
