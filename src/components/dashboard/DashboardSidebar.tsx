@@ -220,7 +220,7 @@ const DashboardSidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => 
             <Hospital className="h-6 w-6 text-primary-foreground" />
           </div>
           <div className={cn("ml-3 transition-opacity duration-200", !isOpen && "hidden")}>
-            <h1 className="text-lg font-bold text-sidebar-foreground">HealthAdmin</h1>
+            <h1 className="text-lg font-bold text-sidebar-foreground">TALHealth</h1>
             <p className="text-xs text-sidebar-foreground/60">Admin Portal</p>
           </div>
         </div>
