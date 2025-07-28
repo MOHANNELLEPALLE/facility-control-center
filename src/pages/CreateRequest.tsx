@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import DashboardLayout from '@/components/dashboard/DashboardLayout';
+import PageHeader from '@/components/dashboard/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -66,13 +68,14 @@ const CreateRequest = () => {
   ];
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2">Create Healthcare Request</h1>
-        <p className="text-muted-foreground">Submit a new healthcare request for yourself or someone else</p>
-      </div>
+    <DashboardLayout>
+      <div className="space-y-6">
+        <PageHeader 
+          title="Create Healthcare Request" 
+          description="Submit a new healthcare request for yourself or someone else"
+        />
 
-      <Card className="shadow-lg">
+        <Card className="shadow-lg">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl flex items-center gap-2">
             <FileText className="h-6 w-6 text-theme-primary" />
@@ -198,8 +201,9 @@ const CreateRequest = () => {
             </div>
           </form>
         </CardContent>
-      </Card>
-    </div>
+        </Card>
+      </div>
+    </DashboardLayout>
   );
 };
 
