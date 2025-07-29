@@ -185,30 +185,6 @@ const Users = () => {
         description="View and manage all users in the system."
       />
 
-      {/* More compact summary cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-        <Card className="shadow-sm">
-          <CardContent className="pt-4 pb-4 px-4">
-            <div className="text-xl font-bold">{totalUsers}</div>
-            <div className="text-sm text-theme-secondary">Total Users</div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm">
-          <CardContent className="pt-4 pb-4 px-4">
-            <div className="text-xl font-bold">{activeUsers}</div>
-            <div className="text-sm text-theme-secondary">Active Users</div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm">
-          <CardContent className="pt-4 pb-4 px-4">
-            <div className="text-xl font-bold">{pendingUsers}</div>
-            <div className="text-sm text-theme-secondary">
-              Pending Verification
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
       <div className="bg-white rounded-lg shadow-sm overflow-hidden mt-6">
         <div className="p-4 border-b border-gray-200">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
@@ -460,9 +436,9 @@ const Users = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
+                        <Button
+                          variant="ghost"
+                          size="icon"
                           className="h-8 w-8"
                           onClick={() => {
                             setSelectedUser(user);
