@@ -1,12 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { authApi } from './authApi';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-}
+import { createSlice } from "@reduxjs/toolkit";
+import { authApi, User } from "./authApi";
 
 interface AuthState {
   user: User | null;
@@ -17,13 +10,13 @@ interface AuthState {
 
 const initialState: AuthState = {
   user: null,
-  token: localStorage.getItem('token'),
-  isAuthenticated: !!localStorage.getItem('token'),
+  token: localStorage.getItem("token"),
+  isAuthenticated: !!localStorage.getItem("token"),
   isLoading: false,
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     logout: (state) => {
@@ -31,7 +24,8 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       state.isLoading = false;
-      localStorage.removeItem('token');
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
     },
   },
   extraReducers: (builder) => {
@@ -41,28 +35,20 @@ const authSlice = createSlice({
         state.isLoading = true;
       })
       .addMatcher(authApi.endpoints.signin.matchFulfilled, (state, action) => {
-        state.user = action.payload.user;
-        state.token = action.payload.token;
+        // Adjust the following line if the user is nested or named differently in AuthResponse
+        const user = (action.payload as any).user as User;
+        state.user = user;
+        console.log("✅ Signin Success Payload:", action.payload);
+        // Adjust the following line if the token is nested or named differently in AuthResponse
+        const token =
+          (action.payload as any).data?.token_detail?.token ||
+          (action.payload as any).token;
+        state.token = token;
         state.isAuthenticated = true;
         state.isLoading = false;
-        localStorage.setItem('token', action.payload.token);
+        localStorage.setItem("token", token);
       })
       .addMatcher(authApi.endpoints.signin.matchRejected, (state) => {
-        state.isLoading = false;
-        state.isAuthenticated = false;
-      })
-      // Handle signup
-      .addMatcher(authApi.endpoints.signup.matchPending, (state) => {
-        state.isLoading = true;
-      })
-      .addMatcher(authApi.endpoints.signup.matchFulfilled, (state, action) => {
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.isAuthenticated = true;
-        state.isLoading = false;
-        localStorage.setItem('token', action.payload.token);
-      })
-      .addMatcher(authApi.endpoints.signup.matchRejected, (state) => {
         state.isLoading = false;
         state.isAuthenticated = false;
       });

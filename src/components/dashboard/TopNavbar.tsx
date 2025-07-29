@@ -1,18 +1,19 @@
-
 import React, { useState } from "react";
 import { Bell, LogOut, Search, Settings } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { logout } from "@/store/features/authSlice";
+import { useAppDispatch } from "@/store/hooks";
 
 interface TopNavbarProps {
   toggleSidebar: () => void;
@@ -21,24 +22,15 @@ interface TopNavbarProps {
 const TopNavbar: React.FC<TopNavbarProps> = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [notificationCount] = useState(3);
 
-  const handleNotificationClick = () => {
-    toast({
-      title: "Notifications",
-      description: "You have 3 unread notifications",
-    });
-  };
-
+  const dispatch = useAppDispatch();
   const handleLogout = () => {
     toast({
       title: "Logging out",
       description: "You have been logged out successfully",
     });
-    // In a real app, handle actual logout logic here
-    setTimeout(() => {
-      navigate("/");
-    }, 1000);
+    dispatch(logout());
+    navigate("/");
   };
 
   return (
@@ -46,25 +38,15 @@ const TopNavbar: React.FC<TopNavbarProps> = () => {
       <div className="flex-1 flex">
         <div className="relative w-full max-w-lg">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <Input 
-            type="search" 
-            placeholder="Search..." 
+          <Input
+            type="search"
+            placeholder="Search..."
             className="pl-10 bg-gray-50 border-gray-200 focus:ring-health-600 focus:border-health-600"
           />
         </div>
       </div>
-      
-      <div className="flex items-center space-x-4">
-        <button 
-          className="p-2 rounded-full hover:bg-gray-100 relative"
-          onClick={handleNotificationClick}
-        >
-          <Bell className="h-5 w-5 text-gray-500" />
-          {notificationCount > 0 && (
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-          )}
-        </button>
 
+      <div className="flex items-center space-x-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="p-2 rounded-full hover:bg-gray-100">

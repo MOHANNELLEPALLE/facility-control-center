@@ -1,56 +1,63 @@
-import { api } from '../api';
-
-// Auth request types
-export interface SignupRequest {
-  name: string;
-  email: string;
-  password: string;
-  role?: string;
-}
+import { api } from "../api";
 
 export interface SigninRequest {
-  email: string;
+  account: string;
   password: string;
+  dontSendToken?: boolean;
 }
-
 // Auth response types
 export interface User {
-  id: string;
-  name: string;
+  unique_id: string;
+  display_name: string;
   email: string;
-  role: string;
+  profile_image_url: string;
+  roles: string[];
+  token_detail: {
+    token: string;
+    type: string;
+  };
+  name: {
+    first_name: string;
+    middle_name: string;
+    last_name: string;
+  };
+  phone: string;
+  dob: number;
+  // Add more as needed
 }
 
 export interface AuthResponse {
-  user: User;
-  token: string;
-  message?: string;
+  data: {
+    unique_id: string;
+    email: string;
+    phone: string;
+    username: string;
+    display_name: string;
+    token_detail: {
+      token: string;
+      type: string;
+    };
+    roles: string[];
+    // add more if needed
+  };
+  message: string;
+  status: string;
+  statusCode: number;
 }
 
 // Extend the main API with auth endpoints
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    signup: builder.mutation<AuthResponse, SignupRequest>({
-      query: (credentials) => ({
-        url: '/auth/signup',
-        method: 'POST',
-        body: credentials,
-      }),
-      invalidatesTags: ['User'],
-    }),
     signin: builder.mutation<AuthResponse, SigninRequest>({
       query: (credentials) => ({
-        url: '/auth/signin',
-        method: 'POST',
+        url: "/login",
+        method: "POST",
         body: credentials,
       }),
-      invalidatesTags: ['User'],
+      invalidatesTags: ["User"],
     }),
   }),
 });
 
 // Export hooks for usage in components
-export const {
-  useSignupMutation,
-  useSigninMutation,
-} = authApi;
+export const { useSigninMutation } = authApi;
