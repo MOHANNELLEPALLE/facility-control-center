@@ -210,66 +210,72 @@ const Users = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Date Range Picker */}
-            <div className="flex items-center space-x-2 relative z-20">
-              <CalendarIcon className="h-5 w-5 text-theme-secondary" />
-              <span className="font-medium">Date Range:</span>
-              <DatePicker
-                selected={
-                  dateRange.startDate ? new Date(dateRange.startDate) : null
-                }
-                onChange={(date: Date) =>
-                  setDateRange((prev) => ({
-                    ...prev,
-                    startDate: date ? date.getTime() : undefined,
-                  }))
-                }
-                selectsStart
-                startDate={
-                  dateRange.startDate ? new Date(dateRange.startDate) : null
-                }
-                endDate={dateRange.endDate ? new Date(dateRange.endDate) : null}
-                placeholderText="Start Date"
-                maxDate={
-                  dateRange.endDate ? new Date(dateRange.endDate) : undefined
-                }
-                popperPlacement="bottom-start"
-                popperClassName="z-50"
-              />
-              <span>to</span>
-              <DatePicker
-                selected={
-                  dateRange.endDate ? new Date(dateRange.endDate) : null
-                }
-                onChange={(date: Date) =>
-                  setDateRange((prev) => ({
-                    ...prev,
-                    endDate: date ? date.getTime() : undefined,
-                  }))
-                }
-                selectsEnd
-                startDate={
-                  dateRange.startDate ? new Date(dateRange.startDate) : null
-                }
-                endDate={dateRange.endDate ? new Date(dateRange.endDate) : null}
-                minDate={
-                  dateRange.startDate
-                    ? new Date(dateRange.startDate)
-                    : undefined
-                }
-                placeholderText="End Date"
-                maxDate={new Date()}
-                popperPlacement="bottom-start"
-                popperClassName="z-50"
-              />
+            <div className="col-span-full lg:col-span-2">
+              <div className="flex items-center space-x-2 relative">
+                <CalendarIcon className="h-5 w-5 text-theme-secondary flex-shrink-0" />
+                <span className="font-medium whitespace-nowrap">Date Range:</span>
+                <div className="flex items-center space-x-2 flex-wrap">
+                  <DatePicker
+                    selected={
+                      dateRange.startDate ? new Date(dateRange.startDate) : null
+                    }
+                    onChange={(date: Date) =>
+                      setDateRange((prev) => ({
+                        ...prev,
+                        startDate: date ? date.getTime() : undefined,
+                      }))
+                    }
+                    selectsStart
+                    startDate={
+                      dateRange.startDate ? new Date(dateRange.startDate) : null
+                    }
+                    endDate={dateRange.endDate ? new Date(dateRange.endDate) : null}
+                    placeholderText="Start Date"
+                    maxDate={
+                      dateRange.endDate ? new Date(dateRange.endDate) : undefined
+                    }
+                    popperPlacement="bottom-start"
+                    popperClassName="!z-[60]"
+                    className="w-32 text-sm border rounded px-2 py-1"
+                  />
+                  <span className="text-theme-secondary">to</span>
+                  <DatePicker
+                    selected={
+                      dateRange.endDate ? new Date(dateRange.endDate) : null
+                    }
+                    onChange={(date: Date) =>
+                      setDateRange((prev) => ({
+                        ...prev,
+                        endDate: date ? date.getTime() : undefined,
+                      }))
+                    }
+                    selectsEnd
+                    startDate={
+                      dateRange.startDate ? new Date(dateRange.startDate) : null
+                    }
+                    endDate={dateRange.endDate ? new Date(dateRange.endDate) : null}
+                    minDate={
+                      dateRange.startDate
+                        ? new Date(dateRange.startDate)
+                        : undefined
+                    }
+                    placeholderText="End Date"
+                    maxDate={new Date()}
+                    popperPlacement="bottom-start"
+                    popperClassName="!z-[60]"
+                    className="w-32 text-sm border rounded px-2 py-1"
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Role Filter */}
-            <div>
+            <div className="relative">
               <Select value={role} onValueChange={setRole}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Role Filter" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="z-[50]">
                   <SelectItem value="patient,doctor,facility,organization">
                     All Roles
                   </SelectItem>
@@ -282,12 +288,12 @@ const Users = () => {
             </div>
 
             {/* Status Filter */}
-            <div>
+            <div className="relative">
               <Select value={status} onValueChange={setStatus}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Status Filter" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="z-[50]">
                   <SelectItem value="all">All</SelectItem>
                   <SelectItem value="0">Pending</SelectItem>
                   <SelectItem value="1">Approved</SelectItem>
@@ -297,7 +303,7 @@ const Users = () => {
             </div>
 
             {/* Search */}
-            <div>
+            <div className="col-span-full lg:col-span-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-theme-secondary" />
                 <Input
