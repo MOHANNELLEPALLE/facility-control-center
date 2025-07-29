@@ -6,6 +6,7 @@ interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  userId: string | null;
 }
 
 const initialState: AuthState = {
@@ -13,6 +14,7 @@ const initialState: AuthState = {
   token: localStorage.getItem("token"),
   isAuthenticated: !!localStorage.getItem("token"),
   isLoading: false,
+  userId: localStorage.getItem("userId") || null,
 };
 
 const authSlice = createSlice({
@@ -46,6 +48,7 @@ const authSlice = createSlice({
         state.token = token;
         state.isAuthenticated = true;
         state.isLoading = false;
+        state.userId = user?.unique_id || null;
         localStorage.setItem("token", token);
       })
       .addMatcher(authApi.endpoints.signin.matchRejected, (state) => {

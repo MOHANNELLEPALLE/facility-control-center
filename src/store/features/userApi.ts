@@ -49,6 +49,14 @@ export const authApi = api.injectEndpoints({
 
       providesTags: ["User"],
     }),
+    updateProfile: builder.mutation<any, { userId: string; values: any }>({
+      query: ({ userId, values }) => ({
+        url: `/user/${userId}`,
+        method: "PUT",
+        body: values,
+      }),
+      invalidatesTags: ["User"], // Optional: Invalidate user cache if needed
+    }),
   }),
 });
-export const { useLazyGetUsersQuery } = authApi;
+export const { useLazyGetUsersQuery, useUpdateProfileMutation } = authApi;

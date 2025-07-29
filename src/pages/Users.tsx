@@ -17,26 +17,28 @@ import {
   Eye,
   Check,
   X,
-  UserPlus,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { useLazyGetUsersQuery } from "@/store/features/userApi";
+import {
+  useLazyGetUsersQuery,
+  useUpdateProfileMutation,
+} from "@/store/features/userApi";
 import PaginationBar from "@/components/common/PaginationBar";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useDebounce } from "use-debounce"; // Add this import (install with: npm install use-debounce)
 import UserDetailsModal from "@/components/modals/UserDetailsModal";
 
-// Remove mockUsers if you want real summary data
-const mockUsers: any[] = [];
+import { useToast } from "@/hooks/use-toast";
 
 const Users = () => {
   const [trigger, { data, isLoading, error }] = useLazyGetUsersQuery();
+  const [updateProfile] = useUpdateProfileMutation();
   const [page, setPage] = useState(1);
   const pageSize = 10;
   const [role, setRole] = useState<string>(
     "patient,doctor,facility,organization"
   );
+  const { toast } = useToast();
   const [search, setSearch] = useState<string>("");
   const [status, setStatus] = useState<string>("all");
   const [selectedUser, setSelectedUser] = useState<any>(null);
@@ -70,15 +72,6 @@ const Users = () => {
     });
   }, [trigger, page, role, debouncedSearch, status, dateRange, pageSize]);
 
-  useEffect(() => {
-    if (data) {
-      console.log("Fetched users data:", data);
-    }
-    if (error) {
-      console.error("Error fetching users:", error);
-    }
-  }, [data, error]);
-
   // Use API data or fallback to empty array
   const users = Array.isArray(data?.data) ? data.data : [];
   const totalCount =
@@ -87,14 +80,6 @@ const Users = () => {
       : users.length;
   const totalPages = Math.ceil(totalCount / pageSize);
 
-  // Remove or update these if you want real summary data
-  const totalUsers = mockUsers.length;
-  const activeUsers = mockUsers.filter(
-    (user) => user.status === "Active"
-  ).length;
-  const pendingUsers = mockUsers.filter(
-    (user) => user.status === "Pending"
-  ).length;
   const getStatusLabel = (status) => {
     if (status === -1) {
       return "Rejected";
@@ -103,18 +88,6 @@ const Users = () => {
     } else if (status === 1) {
       return "Approved";
     }
-  };
-  const handleApplyFilters = () => {
-    setPage(1);
-    trigger({
-      limit: pageSize,
-      offset: 0,
-      startDate: dateRange.startDate,
-      endDate: dateRange.endDate,
-      roles: role || undefined,
-      search: search || undefined,
-      status: status === "all" ? undefined : status,
-    });
   };
 
   const handleClearFilters = () => {
@@ -178,6 +151,23 @@ const Users = () => {
     }
   };
 
+  const handleUpdate = async (userStatus, userId) => {
+    try {
+      const response = await updateProfile({
+        userId: userId,
+        values: { profileVerificationStatus: userStatus },
+      }).unwrap();
+      toast({
+        title: "Profile Status Updated",
+        description: `User ID: ${userId} has been ${
+          userStatus === 1 ? "accepted" : "rejected"
+        } successfully.`,
+      });
+    } catch (err) {
+      console.error("Failed to update profile:", err);
+    }
+  };
+
   return (
     <DashboardLayout>
       <PageHeader
@@ -188,14 +178,6 @@ const Users = () => {
       <div className="bg-white rounded-lg shadow-sm overflow-hidden mt-6">
         <div className="p-4 border-b border-gray-200">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-            <Button
-              variant="default"
-              className="bg-theme-primary hover:bg-theme-primary/90 mb-4 md:mb-0"
-            >
-              <UserPlus className="mr-2 h-4 w-4" />
-              Add User
-            </Button>
-
             <div className="flex space-x-2">
               <Button
                 variant="outline"
@@ -210,7 +192,7 @@ const Users = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Date Range Picker */}
-            <div className="flex items-center space-x-2 relative z-20">
+            <div className="flex items-center space-x-2 relative z-10">
               <CalendarIcon className="h-5 w-5 text-theme-secondary" />
               <span className="font-medium">Date Range:</span>
               <DatePicker
@@ -311,15 +293,8 @@ const Users = () => {
             </div>
           </div>
 
-          {/* <div className="flex flex-col md:flex-row md:items-center md:justify-between mt-4">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mt-4">
             <div className="flex space-x-2 mb-4 md:mb-0">
-              <Button
-                variant="default"
-                className="bg-theme-primary hover:bg-theme-primary/90"
-                onClick={handleApplyFilters}
-              >
-                Apply
-              </Button>
               <Button
                 variant="outline"
                 className="text-theme-secondary border-theme-secondary/30"
@@ -328,7 +303,7 @@ const Users = () => {
                 Clear
               </Button>
             </div>
-          </div> */}
+          </div>
         </div>
 
         <div className="overflow-x-auto">
@@ -429,11 +404,23 @@ const Users = () => {
                         : "-"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+      ${
+        user?.profileVerificationStatus === 1
+          ? "bg-green-100 text-green-800"
+          : user?.profileVerificationStatus === 0
+          ? "bg-orange-100 text-orange-800"
+          : user?.profileVerificationStatus === -1
+          ? "bg-red-100 text-red-800"
+          : "bg-gray-100 text-gray-800"
+      }`}
+                      >
                         {getStatusLabel(user?.profileVerificationStatus) ||
                           "Unknown"}
                       </span>
                     </td>
+
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
                         <Button
@@ -451,6 +438,7 @@ const Users = () => {
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8 text-green-600 hover:text-green-700"
+                          onClick={() => handleUpdate(1, user._id)}
                         >
                           <Check className="h-4 w-4" />
                         </Button>
@@ -458,6 +446,7 @@ const Users = () => {
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8 text-theme-primary hover:text-theme-primary/90"
+                          onClick={() => handleUpdate(-1, user._id)}
                         >
                           <X className="h-4 w-4" />
                         </Button>
