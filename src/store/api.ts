@@ -1,9 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-// Define API base URL - replace with your actual API URL
-const API_BASE_URL = process.env.NODE_ENV === 'development' 
-  ? 'http://localhost:3000/api' 
-  : '/api';
+// Define API base URL
+const API_BASE_URL = 'https://touch-a-life-dev.web.app/api/v1';
 
 export const api = createApi({
   reducerPath: 'api',

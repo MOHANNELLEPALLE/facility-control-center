@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { authApi } from './authApi';
 
 interface User {
   id: string;
@@ -25,19 +26,6 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    loginStart: (state) => {
-      state.isLoading = true;
-    },
-    loginSuccess: (state, action: PayloadAction<{ user: User; token: string }>) => {
-      state.user = action.payload.user;
-      state.token = action.payload.token;
-      state.isAuthenticated = true;
-      state.isLoading = false;
-      localStorage.setItem('token', action.payload.token);
-    },
-    loginFailure: (state) => {
-      state.isLoading = false;
-    },
     logout: (state) => {
       state.user = null;
       state.token = null;
@@ -46,7 +34,40 @@ const authSlice = createSlice({
       localStorage.removeItem('token');
     },
   },
+  extraReducers: (builder) => {
+    builder
+      // Handle signin
+      .addMatcher(authApi.endpoints.signin.matchPending, (state) => {
+        state.isLoading = true;
+      })
+      .addMatcher(authApi.endpoints.signin.matchFulfilled, (state, action) => {
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.isAuthenticated = true;
+        state.isLoading = false;
+        localStorage.setItem('token', action.payload.token);
+      })
+      .addMatcher(authApi.endpoints.signin.matchRejected, (state) => {
+        state.isLoading = false;
+        state.isAuthenticated = false;
+      })
+      // Handle signup
+      .addMatcher(authApi.endpoints.signup.matchPending, (state) => {
+        state.isLoading = true;
+      })
+      .addMatcher(authApi.endpoints.signup.matchFulfilled, (state, action) => {
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.isAuthenticated = true;
+        state.isLoading = false;
+        localStorage.setItem('token', action.payload.token);
+      })
+      .addMatcher(authApi.endpoints.signup.matchRejected, (state) => {
+        state.isLoading = false;
+        state.isAuthenticated = false;
+      });
+  },
 });
 
-export const { loginStart, loginSuccess, loginFailure, logout } = authSlice.actions;
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;
