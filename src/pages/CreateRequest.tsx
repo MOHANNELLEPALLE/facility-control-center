@@ -9,8 +9,8 @@ import { CreateRequestFormData } from '@/types/request';
 const CreateRequest = () => {
   const { submitRequest } = useCreateRequest();
 
-  const handleSubmit = useCallback((data: CreateRequestFormData) => {
-    const result = submitRequest(data);
+  const handleSubmit = useCallback(async (data: CreateRequestFormData) => {
+    const result = await submitRequest(data);
     if (result.success) {
       // TODO: Navigate to requests list or show success state
     }

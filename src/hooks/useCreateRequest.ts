@@ -1,13 +1,12 @@
-import { useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { CreateRequestFormData } from '@/types/request';
 
 export const useCreateRequest = () => {
   const { toast } = useToast();
 
-  const submitRequest = useCallback((data: CreateRequestFormData) => {
+  const submitRequest = async (data: CreateRequestFormData) => {
     try {
-      // TODO: Replace with actual API call
+      // TODO: Replace with RTK Query mutation
       console.log('Submitting request:', data);
       
       toast({
@@ -25,7 +24,7 @@ export const useCreateRequest = () => {
       
       return { success: false, error };
     }
-  }, [toast]);
+  };
 
-  return { submitRequest };
+  return { submitRequest, isLoading: false };
 };
