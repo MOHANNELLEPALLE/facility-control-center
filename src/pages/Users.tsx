@@ -25,6 +25,7 @@ import PaginationBar from "@/components/common/PaginationBar";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useDebounce } from "use-debounce"; // Add this import (install with: npm install use-debounce)
+import UserDetailsModal from "@/components/modals/UserDetailsModal";
 
 // Remove mockUsers if you want real summary data
 const mockUsers: any[] = [];
@@ -38,6 +39,8 @@ const Users = () => {
   );
   const [search, setSearch] = useState<string>("");
   const [status, setStatus] = useState<string>("all");
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const now = new Date();
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(now.getDate() - 7);
@@ -457,7 +460,15 @@ const Users = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-8 w-8"
+                          onClick={() => {
+                            setSelectedUser(user);
+                            setIsModalOpen(true);
+                          }}
+                        >
                           <Eye className="h-4 w-4 text-theme-secondary" />
                         </Button>
                         <Button
@@ -492,6 +503,15 @@ const Users = () => {
           />
         </div>
       </div>
+
+      <UserDetailsModal
+        user={selectedUser}
+        open={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedUser(null);
+        }}
+      />
     </DashboardLayout>
   );
 };
