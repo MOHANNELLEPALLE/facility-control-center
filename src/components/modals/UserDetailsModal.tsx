@@ -50,6 +50,25 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
     return dateString ? new Date(dateString).toLocaleDateString() : "-";
   };
 
+  const formatAddress = (address: any) => {
+    if (!address || typeof address !== 'object') return "-";
+    
+    const addressParts = [
+      address.line1,
+      address.line2,
+      address.locality,
+      address.village,
+      address.mandal,
+      address.district,
+      address.city,
+      address.state,
+      address.country,
+      address.zip_code
+    ].filter(Boolean);
+    
+    return addressParts.length > 0 ? addressParts.join(", ") : "-";
+  };
+
   const formatRoles = (roles: string[] | string) => {
     if (Array.isArray(roles)) {
       return roles.map(role => 
@@ -123,7 +142,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                 {user?.address && (
                   <div className="md:col-span-2">
                     <label className="text-sm font-medium text-muted-foreground">Address</label>
-                    <p className="text-sm">{user.address}</p>
+                    <p className="text-sm">{formatAddress(user.address)}</p>
                   </div>
                 )}
               </div>
