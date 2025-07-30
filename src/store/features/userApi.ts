@@ -55,8 +55,30 @@ export const authApi = api.injectEndpoints({
         method: "PUT",
         body: values,
       }),
-      invalidatesTags: ["User"], // Optional: Invalidate user cache if needed
+      invalidatesTags: ["User"],
+    }),
+    addUsersInBulk: builder.mutation<any, any[]>({
+      query: (body) => ({
+        url: "/user/add/bulk",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body), // raw array, not wrapped in object
+      }),
+    }),
+    SearchUserByEmailorPhoneNumber: builder.mutation<any, string>({
+      query: (value) => ({
+        url: "/searchuser",
+        method: "POST",
+        body: { account: value },
+      }),
     }),
   }),
 });
-export const { useLazyGetUsersQuery, useUpdateProfileMutation } = authApi;
+export const {
+  useLazyGetUsersQuery,
+  useUpdateProfileMutation,
+  useAddUsersInBulkMutation,
+  useSearchUserByEmailorPhoneNumberMutation,
+} = authApi;

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import DashboardSidebar from "./DashboardSidebar";
@@ -19,9 +18,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   return (
     <div className="dashboard-container flex min-h-screen bg-gray-50">
       <DashboardSidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
-      <div 
+      <div
         className={`dashboard-content flex-1 flex flex-col transition-all duration-300 ease-in-out ${
-          sidebarOpen ? 'ml-0 md:ml-64' : 'ml-0 md:ml-16'
+          sidebarOpen ? "ml-0 md:ml-64" : "ml-0 md:ml-16"
         }`}
       >
         <TopNavbar toggleSidebar={toggleSidebar} />
