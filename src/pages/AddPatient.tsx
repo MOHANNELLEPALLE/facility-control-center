@@ -185,7 +185,9 @@ const AddPatient: React.FC = () => {
                   <TextInput name="last_name" label="Last Name" />
                 </div>
                 {/* Email */}
-                <EmailComponent name="email" />
+                <Suspense fallback={<div>Loading Email Component...</div>}>
+                  <EmailComponent name="email" />{" "}
+                </Suspense>
                 {/* Generated Password */}
                 <div className="space-y-2">
                   <Label>Generated Password (Read-Only)</Label>
@@ -233,12 +235,16 @@ const AddPatient: React.FC = () => {
                     </p>
                   </div>
                 </div>{" "}
-                <Suspense fallback={<div>Loading address form...</div>}>
-                  {/* Phone Number */}
+                {/* Phone Number */}
+                <Suspense fallback={<div>Loading PhoneNumber...</div>}>
                   <PhoneNumberInput name="phone" label="Phone Number" />
-                  {/* Gender */}
+                </Suspense>
+                <Suspense fallback={<div>Loading Gender...</div>}>
                   <GenderSelector name="gender" />
-                  {/* Location Fields */}
+                </Suspense>
+                {/* Gender */}
+                {/* Location Fields */}
+                <Suspense fallback={<div>Loading address form...</div>}>
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium">
                       Location Information

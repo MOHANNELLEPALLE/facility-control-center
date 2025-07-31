@@ -1,4 +1,4 @@
-import React, { lazy, useEffect, useMemo, useState } from "react";
+import React, { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import PageHeader from "@/components/dashboard/PageHeader";
 import { Input } from "@/components/ui/input";
@@ -8,11 +8,18 @@ import { FieldErrors, FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "@/hooks/use-toast";
 import TextInput from "@/components/common/TextInput";
-import { EmailComponent } from "@/components/common/AsyncEmailInput";
+// import { EmailComponent } from "@/components/common/AsyncEmailInput";
+const EmailComponent = React.lazy(() =>
+  import("@/components/common/AsyncEmailInput").then((mod) => ({
+    default: mod.EmailComponent,
+  }))
+);
 import { AlertCircle, Copy, Eye, EyeOff } from "lucide-react";
 import { Label } from "recharts";
-import PhoneNumberInput from "@/components/common/PhoneNumberInput";
-import GenderSelector from "@/components/common/GenderSelector";
+const PhoneNumberInput = lazy(
+  () => import("@/components/common/PhoneNumberInput")
+);
+const GenderSelector = lazy(() => import("@/components/common/GenderSelector"));
 import { MultiSelect } from "@/components/common/MultiSelectDropdown";
 import { useGetHospitalServicesQuery } from "@/store/features/commonApi";
 import { useAddUsersInBulkMutation } from "@/store/features/userApi";
@@ -183,7 +190,9 @@ const AddDoctor = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                <EmailComponent name="email" />
+                <Suspense fallback={<div>Loading Email Component...</div>}>
+                  <EmailComponent name="email" />{" "}
+                </Suspense>
 
                 {/* Password Section */}
                 <div className="space-y-2">
@@ -238,7 +247,9 @@ const AddDoctor = () => {
                   </div>
                 </div>
 
-                <PhoneNumberInput name="phone" label="Phone Number" />
+                <Suspense fallback={<div>Loading PhoneNumber...</div>}>
+                  <PhoneNumberInput name="phone" label="Phone Number" />
+                </Suspense>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
@@ -252,7 +263,9 @@ const AddDoctor = () => {
                   ]}
                   required
                 />
-                <GenderSelector name="gender" />
+                <Suspense fallback={<div>Loading Gender...</div>}>
+                  <GenderSelector name="gender" />
+                </Suspense>
               </div>
             </div>
 
