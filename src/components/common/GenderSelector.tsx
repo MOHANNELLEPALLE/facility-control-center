@@ -36,15 +36,15 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({
               className="flex flex-row space-x-6"
             >
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="male" id="male" />
+                <RadioGroupItem value="male" id="m" />
                 <Label htmlFor="male">Male</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="female" id="female" />
+                <RadioGroupItem value="female" id="f" />
                 <Label htmlFor="female">Female</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="others" id="others" />
+                <RadioGroupItem value="others" id="o" />
                 <Label htmlFor="others">Others</Label>
               </div>
             </RadioGroup>

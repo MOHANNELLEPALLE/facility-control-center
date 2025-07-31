@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, Suspense, lazy } from "react";
 import { useForm, FieldErrors, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -10,18 +10,13 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, Copy, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-const AddressComponent = React.lazy(() =>
-  import("@/components/common/AddressForm").then((mod) => ({
-    default: mod.AddressComponent,
-  }))
-);
+
 import { useAddUsersInBulkMutation } from "@/store/features/userApi";
-const PhoneNumberInput = React.lazy(
+const AddressComponent = lazy(() => import("@/components/common/AddressForm"));
+const PhoneNumberInput = lazy(
   () => import("@/components/common/PhoneNumberInput")
 );
-const GenderSelector = React.lazy(
-  () => import("@/components/common/GenderSelector")
-);
+const GenderSelector = lazy(() => import("@/components/common/GenderSelector"));
 import TextInput from "@/components/common/TextInput";
 const EmailComponent = React.lazy(() =>
   import("@/components/common/AsyncEmailInput").then((mod) => ({
@@ -37,6 +32,7 @@ const addressSchema = z.object({
 });
 export const formSchema = z.object({
   first_name: z.string().min(1, "First name is required"),
+  password: z.string().min(1, "Password is required"),
   last_name: z.string().min(1, "Last name is required"),
   email: z.string().email("Please enter a valid email address"),
   phone: z.string().min(10, "Please enter a valid phone number"),
@@ -77,6 +73,7 @@ const AddPatient: React.FC = () => {
         state: "",
         country: "",
       },
+      password: generatePassword(),
     },
   });
 
@@ -198,6 +195,7 @@ const AddPatient: React.FC = () => {
                       value={generatedPassword}
                       readOnly
                       className="pr-20 bg-muted"
+                      name="password"
                     />
                     <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
                       <Button

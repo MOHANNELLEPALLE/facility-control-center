@@ -177,4 +177,4 @@ const AddressForm: React.FC<AddressFormProps> = ({ showonlyCity = false }) => {
   );
 };
 
-export const AddressComponent = React.memo(AddressForm);
+export default AddressForm;

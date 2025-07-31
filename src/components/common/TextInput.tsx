@@ -8,6 +8,7 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
@@ -17,6 +18,8 @@ interface TextInputProps {
   type?: string;
   placeholder?: string;
   requiredMark?: boolean;
+  description?: string;
+  required?: boolean;
 }
 
 const TextInput: React.FC<TextInputProps> = ({
@@ -25,6 +28,8 @@ const TextInput: React.FC<TextInputProps> = ({
   type = "text",
   placeholder,
   requiredMark = true,
+  description,
+  required,
 }) => {
   const { control } = useFormContext();
 
@@ -36,7 +41,7 @@ const TextInput: React.FC<TextInputProps> = ({
         <FormItem>
           <FormLabel>
             {label}
-            {requiredMark && " *"}
+            {requiredMark && <span className="text-red-500"> *</span>}
           </FormLabel>
           <FormControl>
             <Input
@@ -45,6 +50,15 @@ const TextInput: React.FC<TextInputProps> = ({
               {...field}
             />
           </FormControl>
+
+          {/* Optional description below the input */}
+          {description && (
+            <FormDescription className="text-muted-foreground text-sm">
+              {description}
+            </FormDescription>
+          )}
+
+          {/* Shows validation error if any */}
           <FormMessage />
         </FormItem>
       )}
