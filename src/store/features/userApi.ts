@@ -74,6 +74,13 @@ export const authApi = api.injectEndpoints({
         body: { account: value },
       }),
     }),
+    addOrganization: builder.mutation<any, any>({
+      query: (body) => ({
+        url: "/organization",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 export const {
@@ -81,4 +88,5 @@ export const {
   useUpdateProfileMutation,
   useAddUsersInBulkMutation,
   useSearchUserByEmailorPhoneNumberMutation,
+  useAddOrganizationMutation,
 } = authApi;

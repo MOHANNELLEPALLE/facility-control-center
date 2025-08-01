@@ -48,3 +48,29 @@ npm run dev
 # Build for production
 npm run build
 ```
+
+ <!-- Usage of upload component -->
+
+Firs import config types
+
+<!-- Example -->
+
+import FileUploader from "@/components/ui/file-uploader";
+import { FileUploaderConfig } from "@/types/fileUploader";
+
+const config: FileUploaderConfig = {
+storagePath: "newUploads/documents",
+enableMetadata: true,
+onUploadComplete: (files) => console.log("Uploaded:", files),
+onUploadProgress: (progress) => console.log("Progress:", progress),
+onUploadError: (error) => console.error("Upload error:", error),
+onFileDelete: (file) => console.log("Deleted:", file),
+};
+
+<!-- File USAGE -->
+
+<FileUploader
+config={config}
+multiple
+acceptedTypes="image/_,video/_,.pdf,.docx"
+/>
