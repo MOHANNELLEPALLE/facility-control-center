@@ -272,7 +272,9 @@ const AddDoctor = () => {
             <div className="bg-white rounded-lg shadow-sm p-6">
               <h2 className="text-lg font-medium mb-6">Location Information</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <AddressComponent showonlyCity={true} />
+                <Suspense fallback={<div>Loading address form...</div>}>
+                  <AddressComponent showonlyCity={true} />
+                </Suspense>
               </div>
             </div>
 

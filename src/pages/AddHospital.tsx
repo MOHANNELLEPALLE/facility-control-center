@@ -1,6 +1,6 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
+import { FieldErrors, FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import PageHeader from "@/components/dashboard/PageHeader";
@@ -10,11 +10,9 @@ import TextInput from "@/components/common/TextInput";
 import { AlertCircle, Copy, Eye, EyeOff } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { Label } from "@/components/ui/label"; // fixed import
-import {
-  useAddOrganizationMutation,
-  useAddUsersInBulkMutation,
-} from "@/store/features/userApi";
+import { useAddUsersInBulkMutation } from "@/store/features/userApi";
 import { FormSwitch } from "@/components/common/FormSwitch";
+import { useAddOrganizationMutation } from "@/store/features/faciltyApis";
 
 const EmailComponent = lazy(() =>
   import("@/components/common/AsyncEmailInput").then((mod) => ({
@@ -50,21 +48,19 @@ const formSchema = z.object({
 });
 const addressSchema = z.object({
   city: z.string().min(1, "City is required"),
-  state: z.string().min(1, "State is required"),
-  country: z.string().min(1, "Country is required"),
 });
 const step2Schema = z.object({
   orgName: z.string().min(2, "Hospital name is required"),
   websiteUrl: z.string().min(2, "Website URL is required"),
-  orgAddress: addressSchema,
+  // orgAddress: addressSchema,
 });
 type FormValues = z.infer<typeof formSchema>;
 
 const AddHospital = () => {
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
   const [generatedPassword, setGeneratedPassword] = useState("");
-
+  const [responseOfAdminUser, setResponseOfAdminUser] = useState<any>(null);
   const methods = useForm<FormValues>({
     resolver: zodResolver(step === 1 ? formSchema : step2Schema),
     defaultValues: {
@@ -139,7 +135,14 @@ const AddHospital = () => {
 
       addUsersInBulk(payload)
         .unwrap()
-        .then(() => {
+        .then((response) => {
+          setResponseOfAdminUser(response?.data);
+          console.log(
+            "Response of Admin User:",
+            response,
+            "id",
+            response?.data?._id
+          );
           setStep(2);
           toast({
             title: "Hospital Admin Added Successfully",
@@ -151,7 +154,7 @@ const AddHospital = () => {
         })
         .catch((err) => {
           toast({
-            title: "Error Adding Patient",
+            title: "Error Adding Hospital Admin",
             description: err?.message || "Something went wrong.",
             variant: "destructive",
           });
@@ -161,15 +164,63 @@ const AddHospital = () => {
       const payload = {
         ...data,
         sourceOfSignup: "talhospitals",
-        userId: "688ca7c5950051ac9ded6b91",
+        userId: responseOfAdminUser?._id,
       };
-      addOrganization(payload);
-      alert("Hospital admin account created successfully!");
-      reset();
-      setStep(1);
+      addOrganization(payload)
+        .then((response) => {
+          console.log("Response of Organization Creation:", response);
+
+          const statusCode = response?.data?.statusCode;
+          const message = response?.data?.message;
+          console.log(
+            "Response of Organization Creation:",
+            statusCode,
+            "message",
+            message
+          );
+
+          const nameConflictMessages = [
+            "Organization name already exists",
+            "Hospital name already exists. Please enter a different name.",
+          ];
+
+          if (statusCode === 409 && nameConflictMessages.includes(message)) {
+            toast({
+              title: "Error Adding Hospital Admin",
+              description: message || "Something went wrong.",
+              variant: "destructive",
+            });
+          } else if (statusCode === 200) {
+            toast({
+              title: "Hospital Added Successfully",
+              description: "The hospital has been added successfully.",
+            });
+            reset();
+            setStep(1);
+          } else {
+            toast({
+              title: "Unexpected Response",
+              description: message || "Please try again later.",
+              variant: "destructive",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(
+            "Response of error?.data?.statusCode:",
+            err?.data?.statusCode
+          );
+          toast({
+            title: "Error Adding Hospital",
+            description: err?.message || "Something went wrong.",
+            variant: "destructive",
+          });
+        });
     }
   };
-
+  const onError = (errors: FieldErrors<FormValues>) => {
+    console.log("Form validation errors:", errors);
+  };
   return (
     <DashboardLayout>
       <PageHeader
@@ -179,7 +230,10 @@ const AddHospital = () => {
       <div className="mt-6">
         <div className="bg-white rounded-lg shadow-sm p-6 max-w-3xl">
           <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <form
+              onSubmit={handleSubmit(onSubmit, onError)}
+              className="space-y-6"
+            >
               {step === 1 && (
                 <>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -252,7 +306,7 @@ const AddHospital = () => {
               {step === 2 && (
                 <>
                   <TextInput name="orgName" label="Hospital Name" />
-                  <TextInput name="websiteUrl" label="Registration Number" />
+                  <TextInput name="websiteUrl" label="Website Url" />
                   <Suspense fallback={<div>Loading address form...</div>}>
                     <div className="space-y-4">
                       <h3 className="text-lg font-medium">
