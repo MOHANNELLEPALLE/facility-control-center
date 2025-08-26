@@ -1,10 +1,11 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, User, Phone, Mail, FileText, Download, MapPin } from 'lucide-react';
+import { ArrowLeft, Calendar, User, Phone, Mail, FileText, Download, MapPin, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import { RequestDetails as RequestDetailsType } from '@/types/request';
 
@@ -30,6 +31,52 @@ const mockRequestDetails: RequestDetailsType = {
     hospital: "City Medical Center"
   },
   applicantsCount: 5,
+  applicants: [
+    {
+      id: "app_1",
+      name: "Dr. Michael Chen",
+      imageUrl: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80",
+      age: 34,
+      specialization: "Cardiology",
+      experience: "8 years",
+      appliedDate: "2024-01-16"
+    },
+    {
+      id: "app_2", 
+      name: "Dr. Lisa Rodriguez",
+      imageUrl: "https://images.unsplash.com/photo-1594824389072-006e0748eb63?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80",
+      age: 29,
+      specialization: "Internal Medicine",
+      experience: "5 years",
+      appliedDate: "2024-01-16"
+    },
+    {
+      id: "app_3",
+      name: "Dr. James Wilson",
+      imageUrl: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80",
+      age: 42,
+      specialization: "General Practice",
+      experience: "15 years",
+      appliedDate: "2024-01-17"
+    },
+    {
+      id: "app_4",
+      name: "Dr. Sarah Kim",
+      imageUrl: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80",
+      age: 31,
+      specialization: "Pediatrics",
+      experience: "6 years",
+      appliedDate: "2024-01-17"
+    },
+    {
+      id: "app_5",
+      name: "Dr. Robert Taylor",
+      age: 38,
+      specialization: "Emergency Medicine",
+      experience: "12 years",
+      appliedDate: "2024-01-18"
+    }
+  ],
   attachedDocuments: [
     {
       id: "doc_1",
@@ -192,6 +239,53 @@ const RequestDetails: React.FC = () => {
                   </div>
                 ) : (
                   <p className="text-muted-foreground text-center py-4">No documents attached</p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Applicants */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  Applicants ({request.applicants.length})
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {request.applicants.length > 0 ? (
+                  <div className="space-y-4">
+                    {request.applicants.map((applicant) => (
+                      <div key={applicant.id} className="flex items-center gap-4 p-4 border rounded-lg">
+                        <Avatar className="h-12 w-12">
+                          <AvatarImage src={applicant.imageUrl} alt={applicant.name} />
+                          <AvatarFallback>
+                            {applicant.name.split(' ').map(n => n[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <h4 className="font-medium">{applicant.name}</h4>
+                          <p className="text-sm text-muted-foreground">
+                            {applicant.specialization} • Age {applicant.age}
+                          </p>
+                          {applicant.experience && (
+                            <p className="text-sm text-muted-foreground">
+                              {applicant.experience} experience
+                            </p>
+                          )}
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm text-muted-foreground">
+                            Applied {new Date(applicant.appliedDate).toLocaleDateString()}
+                          </p>
+                          <Button size="sm" variant="outline" className="mt-2">
+                            View Profile
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground text-center py-4">No applicants yet</p>
                 )}
               </CardContent>
             </Card>

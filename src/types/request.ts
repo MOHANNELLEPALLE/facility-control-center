@@ -38,6 +38,15 @@ export interface RequestDetails {
     hospital?: string;
   };
   applicantsCount: number;
+  applicants: Array<{
+    id: string;
+    name: string;
+    imageUrl?: string;
+    age: number;
+    specialization?: string;
+    experience?: string;
+    appliedDate: string;
+  }>;
   attachedDocuments: Array<{
     id: string;
     name: string;
