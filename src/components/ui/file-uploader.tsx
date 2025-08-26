@@ -34,7 +34,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -286,52 +285,6 @@ const FileUploader: React.FC<FileUploaderProps> = ({
         </Card>
       )}
 
-      {/* File Previews (before upload) */}
-      {filePreviews.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm">Files to Upload</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-3">
-              {filePreviews.map((preview) => (
-                <div
-                  key={preview.id}
-                  className="flex items-center gap-3 p-3 border rounded-lg"
-                >
-                  {preview.type === "image" && preview.preview ? (
-                    <img
-                      src={preview.preview}
-                      alt={preview.file.name}
-                      className="h-12 w-12 object-cover rounded"
-                    />
-                  ) : (
-                    <div className="h-12 w-12 bg-muted rounded flex items-center justify-center">
-                      {React.createElement(getFileIcon(preview.file.type), {
-                        className: "h-6 w-6",
-                      })}
-                    </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate">{preview.file.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {formatFileSize(preview.file.size)}
-                    </p>
-                  </div>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => removePreview(preview.id)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
       {/* Uploaded Files */}
       {uploadedFiles.length > 0 && (
         <Card>
@@ -371,21 +324,6 @@ const FileUploader: React.FC<FileUploaderProps> = ({
                         <Badge variant="secondary" className="text-xs">
                           {fileCategory}
                         </Badge>
-                        {file.metadata?.tags && (
-                          <div className="flex gap-1">
-                            {file.metadata.tags
-                              .slice(0, 2)
-                              .map((tag: string, index: number) => (
-                                <Badge
-                                  key={index}
-                                  variant="outline"
-                                  className="text-xs"
-                                >
-                                  {tag}
-                                </Badge>
-                              ))}
-                          </div>
-                        )}
                       </div>
                     </div>
 
@@ -407,17 +345,6 @@ const FileUploader: React.FC<FileUploaderProps> = ({
                       >
                         <Download className="h-4 w-4" />
                       </Button>
-
-                      {mergedConfig.enableMetadata && (
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => openMetadataEditor(file)}
-                          title="Edit Metadata"
-                        >
-                          <Edit3 className="h-4 w-4" />
-                        </Button>
-                      )}
 
                       <Button
                         size="sm"
@@ -480,63 +407,9 @@ const FileUploader: React.FC<FileUploaderProps> = ({
                   <Label>Upload Date</Label>
                   <p>{selectedFile.uploadedAt.toLocaleDateString()}</p>
                 </div>
-                {selectedFile.metadata?.description && (
-                  <div className="col-span-2">
-                    <Label>Description</Label>
-                    <p>{selectedFile.metadata.description}</p>
-                  </div>
-                )}
               </div>
             </div>
           )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Metadata Edit Dialog */}
-      <Dialog
-        open={!!editingMetadata}
-        onOpenChange={() => setEditingMetadata(null)}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit File Metadata</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="tags">Tags (comma-separated)</Label>
-              <Input
-                id="tags"
-                value={metadataForm.tags}
-                onChange={(e) =>
-                  setMetadataForm((prev) => ({ ...prev, tags: e.target.value }))
-                }
-                placeholder="tag1, tag2, tag3"
-              />
-            </div>
-            <div>
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                value={metadataForm.description}
-                onChange={(e) =>
-                  setMetadataForm((prev) => ({
-                    ...prev,
-                    description: e.target.value,
-                  }))
-                }
-                placeholder="File description..."
-              />
-            </div>
-            <div className="flex gap-2">
-              <Button onClick={handleMetadataUpdate}>Save</Button>
-              <Button
-                variant="outline"
-                onClick={() => setEditingMetadata(null)}
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
         </DialogContent>
       </Dialog>
     </div>

@@ -19,17 +19,17 @@ export interface UploadProgress {
 }
 
 export interface FileUploaderConfig {
-  maxFiles?: number;
-  maxFileSize?: number; // in bytes
-  acceptedFileTypes?: string[];
-  allowMultiple?: boolean;
-  storagePath?: string;
-  showPreviews?: boolean;
-  enableMetadata?: boolean;
-  onUploadComplete?: (files: UploadedFile[]) => void;
-  onUploadProgress?: (progress: UploadProgress[]) => void;
-  onUploadError?: (error: string, file?: File) => void;
-  onFileDelete?: (file: UploadedFile) => void;
+  maxFiles: number;
+  maxFileSize: number; // in bytes
+  acceptedFileTypes: string[];
+  allowMultiple: boolean;
+  storagePath: string;
+  showPreviews: boolean;
+  enableMetadata: boolean;
+  onUploadComplete: (files: UploadedFile[]) => void;
+  onUploadProgress: (progress: UploadProgress[]) => void;
+  onUploadError: (error: string, file?: File) => void;
+  onFileDelete: (file: UploadedFile) => void;
 }
 
 export interface FilePreview {

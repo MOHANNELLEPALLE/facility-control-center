@@ -16,3 +16,37 @@ export interface CreateRequestFormProps {
   onCancel: () => void;
   users: User[];
 }
+
+export interface RequestDetails {
+  id: string;
+  title: string;
+  description: string;
+  status: 'pending' | 'approved' | 'rejected' | 'in-progress' | 'completed';
+  createdDate: string;
+  imageUrl?: string;
+  creator: {
+    name: string;
+    id: string;
+    role: string;
+    email?: string;
+  };
+  assignedDoctor?: {
+    name: string;
+    specialization: string;
+    email?: string;
+    phone?: string;
+    hospital?: string;
+  };
+  applicantsCount: number;
+  attachedDocuments: Array<{
+    id: string;
+    name: string;
+    url: string;
+    type: string;
+    size: number;
+    uploadedAt: string;
+  }>;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  estimatedCompletionDate?: string;
+  notes?: string;
+}

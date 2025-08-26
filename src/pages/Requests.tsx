@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import PageHeader from "@/components/dashboard/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -73,6 +74,7 @@ const mockRequests = [
 ];
 
 const Requests = () => {
+  const navigate = useNavigate();
   const [selectedRequest, setSelectedRequest] = useState<typeof mockRequests[0] | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -169,8 +171,13 @@ const Requests = () => {
             </thead>
             <tbody>
               {mockRequests.map((request) => (
-                <tr key={request.id}>
-                  <td className="font-medium">{request.title}</td>
+                 <tr key={request.id}>
+                   <td 
+                     className="font-medium text-blue-600 cursor-pointer hover:underline"
+                     onClick={() => navigate(`/requests/${request.id}`)}
+                   >
+                     {request.title}
+                   </td>
                   <td>{request.creatorType}</td>
                   <td>{request.assignedTo}</td>
                   <td>{request.createdDate}</td>
@@ -198,14 +205,14 @@ const Requests = () => {
                   <td>{request.createdFor}</td>
                   <td>
                     <div className="flex items-center space-x-2">
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        className="h-8 w-8"
-                        onClick={() => handleViewRequest(request)}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
+                       <Button 
+                         variant="ghost" 
+                         size="icon" 
+                         className="h-8 w-8"
+                         onClick={() => navigate(`/requests/${request.id}`)}
+                       >
+                         <Eye className="h-4 w-4" />
+                       </Button>
                       <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600 hover:text-red-700">
                         <Trash2 className="h-4 w-4" />
                       </Button>

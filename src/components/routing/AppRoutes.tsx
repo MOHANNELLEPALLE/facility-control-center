@@ -19,6 +19,7 @@ import AdminSettings from '@/pages/AdminSettings';
 import Login from '@/pages/Login';
 import Analytics from '@/pages/Analytics';
 import CreateRequest from '@/pages/CreateRequest';
+import RequestDetails from '@/pages/RequestDetails';
 
 const AppRoutes: React.FC = () => {
   return (
@@ -41,6 +42,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/admin-settings" element={<AdminSettings />} />
       <Route path="/analytics" element={<Analytics />} />
       <Route path="/create-request" element={<CreateRequest />} />
+      <Route path="/requests/:id" element={<RequestDetails />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
