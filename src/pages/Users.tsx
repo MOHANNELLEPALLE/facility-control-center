@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import PageHeader from "@/components/dashboard/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ import UserDetailsModal from "@/components/modals/UserDetailsModal";
 import { useToast } from "@/hooks/use-toast";
 
 const Users = () => {
+  const navigate = useNavigate();
   const [trigger, { data, isLoading, error }] = useLazyGetUsersQuery();
   const [updateProfile] = useUpdateProfileMutation();
   const [page, setPage] = useState(1);
@@ -360,9 +362,14 @@ const Users = () => {
                         ? new Date(user.createdAt).toLocaleDateString()
                         : "-"}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {user?.name?.first_name} {user?.name?.last_name}
-                    </td>
+                     <td className="px-6 py-4 whitespace-nowrap">
+                       <button
+                         className="text-theme-primary hover:text-theme-primary/80 hover:underline font-medium cursor-pointer"
+                         onClick={() => navigate(`/users/${user._id}`)}
+                       >
+                         {user?.name?.first_name} {user?.name?.last_name}
+                       </button>
+                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {user?.facilities?.length > 0
                         ? user?.facilities?.map((data) => (

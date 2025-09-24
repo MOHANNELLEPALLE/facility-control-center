@@ -20,6 +20,7 @@ import Login from '@/pages/Login';
 import Analytics from '@/pages/Analytics';
 import CreateRequest from '@/pages/CreateRequest';
 import RequestDetails from '@/pages/RequestDetails';
+import UserDetails from '@/pages/UserDetails';
 
 const AppRoutes: React.FC = () => {
   return (
@@ -28,6 +29,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/users" element={<Users />} />
+      <Route path="/users/:id" element={<UserDetails />} />
       <Route path="/facilities" element={<Facilities />} />
       <Route path="/doctors" element={<Doctors />} />
       <Route path="/organizations" element={<Organizations />} />
