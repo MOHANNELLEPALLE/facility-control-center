@@ -76,8 +76,8 @@ const AdminSettings: React.FC = () => {
           description="Manage your admin profile and account settings." 
         />
         
-        <div className="max-w-2xl">
-          <Card>
+        <div className="w-full">
+          <Card className="w-full">
             <CardHeader>
               <CardTitle>Profile Information</CardTitle>
             </CardHeader>
